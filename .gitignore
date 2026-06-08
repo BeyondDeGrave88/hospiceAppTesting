@@ -1,0 +1,87 @@
+# Android Studio
+*.iml
+.gradle/
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Gradle
+gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Build outputs
+app/build/
+*/build/
+build/
+
+# Test reports and results
+app/build/reports/
+app/build/outputs/
+app/build/allure-results/
+app/build/androidTest-results/
+
+# Allure 
+allure-results/
+allure-report/
+*.html
+*.json
+*.xml
+!androidTest-results/*.xml
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IntelliJ IDEA
+*.iws
+out/
+.idea_modules/
+.idea/
+
+# Keystore files
+*.jks
+*.keystore
+
+# Test outputs
+test-output/
+test-results/
+
+# Espresso
+*.apk
+*.ap_
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Node modules
+node_modules/
+
+# Package files
+*.jar
+!.gradle/wrapper/gradle-wrapper.jar
