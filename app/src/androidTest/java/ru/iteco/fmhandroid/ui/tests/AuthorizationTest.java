@@ -12,12 +12,10 @@ import org.junit.runner.RunWith;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Story;
 
-import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.AppActivity;
 import ru.iteco.fmhandroid.ui.data.TestData;
 import ru.iteco.fmhandroid.ui.pages.AuthorizationPage;
 import ru.iteco.fmhandroid.ui.pages.MainPage;
-import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 
 @RunWith(AndroidJUnit4.class)
 @Epic("Авторизация")
@@ -30,10 +28,10 @@ public class AuthorizationTest {
             new ActivityScenarioRule<>(AppActivity.class);
 
     private boolean isLoggedIn() {
-        if (ViewUtils.isViewDisplayed(R.id.enter_button)) {
+        if (authPage.isAuthPageDisplayed()) {
             return false;
         }
-        return ViewUtils.isViewDisplayed(R.id.authorization_image_button);
+        return mainPage.isAuthorized();
     }
 
     @Before
@@ -45,9 +43,9 @@ public class AuthorizationTest {
             mainPage.logout();
         }
 
-        if (!ViewUtils.isViewDisplayed(R.id.enter_button)) {
+        if (!authPage.isAuthPageDisplayed()) {
             activityScenarioRule.getScenario().recreate();
-            if (ViewUtils.isViewDisplayed(R.id.authorization_image_button)) {
+            if (mainPage.isAuthorized()) {
                 mainPage.logout();
             }
         }
