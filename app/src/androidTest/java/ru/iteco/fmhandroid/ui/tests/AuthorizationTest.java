@@ -1,15 +1,5 @@
 package ru.iteco.fmhandroid.ui.tests;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
-
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -24,10 +14,9 @@ import io.qameta.allure.kotlin.Story;
 
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.AppActivity;
-import ru.iteco.fmhandroid.ui.pages.AuthorizationPage;
 import ru.iteco.fmhandroid.ui.data.TestData;
+import ru.iteco.fmhandroid.ui.pages.AuthorizationPage;
 import ru.iteco.fmhandroid.ui.pages.MainPage;
-import ru.iteco.fmhandroid.ui.utils.ToastMatcher;
 import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 
 @RunWith(AndroidJUnit4.class)
@@ -63,7 +52,7 @@ public class AuthorizationTest {
             }
         }
 
-        authPage.waitForAuthorizationScreen();
+        authPage.waitForPageLoaded();
     }
 
     @After
@@ -77,53 +66,36 @@ public class AuthorizationTest {
     @Story("Авторизация с верными данными")
     public void shouldLoginWithValidCredentials() {
         authPage.login(TestData.VALID_LOGIN, TestData.VALID_PASSWORD);
-        ViewUtils.waitForView(R.id.main_menu_image_button, 10000);
-        onView(withId(R.id.main_menu_image_button)).check(matches(isDisplayed()));
+        mainPage.checkMainPageDisplayed();
     }
 
     @Test
     @Story("Авторизация с неверным паролем")
     public void shouldNotLoginWithInvalidPassword() {
         authPage.login(TestData.VALID_LOGIN, TestData.WRONG_PASSWORD);
-        onView(withText(TestData.WRONG_LOGIN_AND_PASSWORD_ERROR))
-                .inRoot(new ToastMatcher())
-                .check(matches(isDisplayed()));
-        onView(withId(R.id.enter_button)).check(matches(isDisplayed()));
+        authPage.checkWrongLoginAndPasswordError();
     }
 
     @Test
     @Story("Авторизация с неверным логином")
     public void shouldNotLoginWithInvalidLogin() {
         authPage.login(TestData.WRONG_LOGIN, TestData.VALID_PASSWORD);
-        onView(withText(TestData.WRONG_LOGIN_AND_PASSWORD_ERROR))
-                .inRoot(new ToastMatcher())
-                .check(matches(isDisplayed()));
-        onView(withId(R.id.enter_button)).check(matches(isDisplayed()));
+        authPage.checkWrongLoginAndPasswordError();
     }
 
     @Test
     @Story("Авторизация с пустыми полями")
     public void shouldNotLoginWithEmptyFields() {
         authPage.loginEmpty();
-
-        onView(withText(TestData.EMPTY_FIELDS_ERROR))
-                .inRoot(new ToastMatcher())
-                .check(matches(isDisplayed()));
-
-        onView(withId(R.id.enter_button)).check(matches(isDisplayed()));
+        authPage.checkEmptyFieldsError();
     }
-
 
     @Test
     @Story("Выход из учетной записи")
     public void shouldLogout() {
         authPage.login(TestData.VALID_LOGIN, TestData.VALID_PASSWORD);
-        ViewUtils.waitForView(R.id.main_menu_image_button, 10000);
-        onView(withId(R.id.main_menu_image_button)).check(matches(isDisplayed()));
-
+        mainPage.checkMainPageDisplayed();
         mainPage.logout();
-
-        authPage.waitForAuthorizationScreen();
-        onView(withId(R.id.enter_button)).check(matches(isDisplayed()));
+        authPage.waitForPageLoaded();
     }
 }
