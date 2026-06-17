@@ -15,19 +15,16 @@ import org.junit.runner.RunWith;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Story;
 
-import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.AppActivity;
 import ru.iteco.fmhandroid.ui.data.TestData;
 import ru.iteco.fmhandroid.ui.pages.AboutPage;
 import ru.iteco.fmhandroid.ui.pages.AuthorizationPage;
 import ru.iteco.fmhandroid.ui.pages.MainPage;
 import ru.iteco.fmhandroid.ui.pages.NewsPage;
-import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 
 @RunWith(AndroidJUnit4.class)
 @Epic("Навигация")
 public class NavigationTest {
-
     private AuthorizationPage authPage;
     private MainPage mainPage;
     private AboutPage aboutPage;
@@ -38,17 +35,10 @@ public class NavigationTest {
             new ActivityScenarioRule<>(AppActivity.class);
 
     private boolean isLoggedIn() {
-        try {
-            ViewUtils.waitForView(R.id.enter_button, 2000);
+        if (authPage.isAuthPageDisplayed()) {
             return false;
-        } catch (AssertionError e) {
-            try {
-                ViewUtils.waitForView(R.id.main_menu_image_button, 2000);
-                return true;
-            } catch (AssertionError e2) {
-                return false;
-            }
         }
+        return mainPage.isAuthorized();
     }
 
     @Before
@@ -62,14 +52,10 @@ public class NavigationTest {
             mainPage.logout();
         }
 
-        try {
-            ViewUtils.waitForView(R.id.enter_button, 3000);
-        } catch (AssertionError e) {
+        if (!authPage.isAuthPageDisplayed()) {
             activityScenarioRule.getScenario().recreate();
-            try {
-                ViewUtils.waitForView(R.id.enter_button, 3000);
-            } catch (AssertionError e2) {
-                if (isLoggedIn()) {
+            if (!authPage.isAuthPageDisplayed()) {
+                if (mainPage.isAuthorized()) {
                     mainPage.logout();
                 }
             }
