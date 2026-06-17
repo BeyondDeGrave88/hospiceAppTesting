@@ -66,4 +66,12 @@ public class AuthorizationPage {
                 .check(matches(isDisplayed()));
         onView(withId(ENTER_BUTTON_ID)).check(matches(isDisplayed()));
     }
+    public boolean isAuthPageDisplayed() {
+        try {
+            ViewUtils.waitForView(ENTER_BUTTON_ID, 1000);
+            return true;
+        } catch (AssertionError e) {
+            return false;
+        }
+    }
 }
