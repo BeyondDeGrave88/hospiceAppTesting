@@ -38,7 +38,6 @@ public class MainPage {
     public void openLogoutMenu() {
         ViewUtils.waitForView(AUTHORIZATION_BUTTON_ID, 10000);
         onView(withId(AUTHORIZATION_BUTTON_ID)).perform(click());
-        // Задержка удалена, так как clickLogout() сам ждёт появления меню
     }
 
     public void clickLogout() {
@@ -57,5 +56,15 @@ public class MainPage {
     public void checkMainPageDisplayed() {
         ViewUtils.waitForView(MAIN_MENU_BUTTON_ID, 10000);
         onView(withId(MAIN_MENU_BUTTON_ID)).check(matches(isDisplayed()));
+    }
+
+
+    public boolean isAuthorized() {
+        try {
+            ViewUtils.waitForView(AUTHORIZATION_BUTTON_ID, 1000);
+            return true;
+        } catch (AssertionError e) {
+            return false;
+        }
     }
 }
