@@ -10,14 +10,14 @@ import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 
 public class AboutPage {
 
-    private final int versionTextViewId = R.id.about_version_title_text_view;
+    public static final int VERSION_TEXT_VIEW_ID = R.id.about_version_title_text_view;
 
     public void waitForPageLoaded() {
-        ViewUtils.waitForView(versionTextViewId, 10000);
+        ViewUtils.waitForView(VERSION_TEXT_VIEW_ID, 10000);
     }
 
     public void checkPageDisplayed() {
         waitForPageLoaded();
-        onView(withId(versionTextViewId)).check(matches(isDisplayed()));
+        onView(withId(VERSION_TEXT_VIEW_ID)).check(matches(isDisplayed()));
     }
 }
