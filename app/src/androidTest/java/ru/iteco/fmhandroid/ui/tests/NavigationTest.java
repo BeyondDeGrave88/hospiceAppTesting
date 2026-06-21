@@ -20,7 +20,7 @@ import ru.iteco.fmhandroid.ui.data.TestData;
 import ru.iteco.fmhandroid.ui.pages.AboutPage;
 import ru.iteco.fmhandroid.ui.pages.AuthorizationPage;
 import ru.iteco.fmhandroid.ui.pages.MainPage;
-import ru.iteco.fmhandroid.ui.pages.NewsPage;
+import ru.iteco.fmhandroid.ui.pages.NewsListPage;
 
 @RunWith(AndroidJUnit4.class)
 @Epic("Навигация")
@@ -28,7 +28,7 @@ public class NavigationTest {
     private AuthorizationPage authPage;
     private MainPage mainPage;
     private AboutPage aboutPage;
-    private NewsPage newsPage;
+    private NewsListPage newsListPage;
 
     @Rule
     public ActivityScenarioRule<AppActivity> activityScenarioRule =
@@ -46,7 +46,7 @@ public class NavigationTest {
         authPage = new AuthorizationPage();
         mainPage = new MainPage();
         aboutPage = new AboutPage();
-        newsPage = new NewsPage();
+        newsListPage = new NewsListPage();
 
         if (isLoggedIn()) {
             mainPage.logout();
@@ -75,34 +75,32 @@ public class NavigationTest {
     }
 
     @Test
-    @Story("Переход со страницы Main на About")
+    @Story("TC006 – Переход со страницы Main на About")
     public void shouldNavigateFromMainToAbout() {
         mainPage.openAbout();
         aboutPage.checkPageDisplayed();
     }
 
-    @Test
-    @Story("Переход со страницы Main на News, потом с News на About")
+    @Test //Баг - неактивная кнопка About
+    @Story("TC007 – Переход со страницы Main на News, потом с News на About")
     public void shouldNavigateFromMainToNewsThenToAbout() {
         mainPage.openNews();
-        newsPage.checkPageDisplayed();
+        newsListPage.checkPageDisplayed();
         mainPage.openAbout();
         aboutPage.checkPageDisplayed();
     }
 
     @Test
-    @Story("Переход со страницы News на страницу Main при нажатии системной кнопки 'Назад'")
+    @Story("TC008 – Переход со страницы News на страницу Main при нажатии системной кнопки 'Назад'")
     public void shouldNavigateBackFromNewsToMain() {
         mainPage.openNews();
-        newsPage.checkPageDisplayed();
-
+        newsListPage.checkPageDisplayed();
         pressBack();
-
         mainPage.checkMainPageDisplayed();
     }
 
     @Test
-    @Story("Однократное нажатие системной кнопки 'Назад' на главной странице Main")
+    @Story("TC009 – Однократное нажатие системной кнопки 'Назад' на главной странице Main")
     public void shouldMinimizeAppOnBackPressFromMain() {
         mainPage.checkMainPageDisplayed();
         try {
