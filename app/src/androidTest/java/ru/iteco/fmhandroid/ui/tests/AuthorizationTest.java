@@ -61,35 +61,35 @@ public class AuthorizationTest {
     }
 
     @Test
-    @Story("Авторизация с верными данными")
+    @Story("TC001 – Авторизация с верными данными")
     public void shouldLoginWithValidCredentials() {
         authPage.login(TestData.VALID_LOGIN, TestData.VALID_PASSWORD);
         mainPage.checkMainPageDisplayed();
     }
 
-    @Test
-    @Story("Авторизация с неверным паролем")
+    @Test//Баг - неоответсвие сообщения
+    @Story("TC002 – Авторизация с неверным паролем")
     public void shouldNotLoginWithInvalidPassword() {
         authPage.login(TestData.VALID_LOGIN, TestData.WRONG_PASSWORD);
         authPage.checkWrongLoginAndPasswordError();
     }
 
-    @Test
-    @Story("Авторизация с неверным логином")
+    @Test //Баг - неоответсвие сообщения
+    @Story("TC003 – Авторизация с неверным логином")
     public void shouldNotLoginWithInvalidLogin() {
         authPage.login(TestData.WRONG_LOGIN, TestData.VALID_PASSWORD);
         authPage.checkWrongLoginAndPasswordError();
     }
 
     @Test
-    @Story("Авторизация с пустыми полями")
+    @Story("TC004 – Авторизация с пустыми полями")
     public void shouldNotLoginWithEmptyFields() {
         authPage.loginEmpty();
         authPage.checkEmptyFieldsError();
     }
 
     @Test
-    @Story("Выход из учетной записи")
+    @Story("TC005 – Выход из учетной записи")
     public void shouldLogout() {
         authPage.login(TestData.VALID_LOGIN, TestData.VALID_PASSWORD);
         mainPage.checkMainPageDisplayed();
