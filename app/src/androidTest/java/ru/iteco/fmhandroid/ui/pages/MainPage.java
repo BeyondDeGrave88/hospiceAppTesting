@@ -9,6 +9,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import ru.iteco.fmhandroid.R;
+import ru.iteco.fmhandroid.ui.data.TestData;
 import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 
 public class MainPage {
@@ -23,16 +24,16 @@ public class MainPage {
 
     public void openNews() {
         openSideMenu();
-        ViewUtils.waitForView(withText("News"), 5000);
-        onView(withText("News")).check(matches(isEnabled()));
-        onView(withText("News")).perform(click());
+        ViewUtils.waitForView(withText(TestData.NEWS_MENU_ITEM), 5000);
+        onView(withText(TestData.NEWS_MENU_ITEM)).check(matches(isEnabled()));
+        onView(withText(TestData.NEWS_MENU_ITEM)).perform(click());
     }
 
     public void openAbout() {
         openSideMenu();
-        ViewUtils.waitForView(withText("About"), 5000);
-        onView(withText("About")).check(matches(isEnabled()));
-        onView(withText("About")).perform(click());
+        ViewUtils.waitForView(withText(TestData.ABOUT_MENU_ITEM), 5000);
+        onView(withText(TestData.ABOUT_MENU_ITEM)).check(matches(isEnabled()));
+        onView(withText(TestData.ABOUT_MENU_ITEM)).perform(click());
     }
 
     public void openLogoutMenu() {
@@ -41,9 +42,9 @@ public class MainPage {
     }
 
     public void clickLogout() {
-        ViewUtils.waitForView(withText("Log out"), 5000);
-        onView(withText("Log out")).check(matches(isEnabled()));
-        onView(withText("Log out")).perform(click());
+        ViewUtils.waitForView(withText(TestData.LOGOUT_MENU_ITEM), 5000);
+        onView(withText(TestData.LOGOUT_MENU_ITEM)).check(matches(isEnabled()));
+        onView(withText(TestData.LOGOUT_MENU_ITEM)).perform(click());
     }
 
     public void logout() {
@@ -57,7 +58,6 @@ public class MainPage {
         ViewUtils.waitForView(MAIN_MENU_BUTTON_ID, 10000);
         onView(withId(MAIN_MENU_BUTTON_ID)).check(matches(isDisplayed()));
     }
-
 
     public boolean isAuthorized() {
         try {
