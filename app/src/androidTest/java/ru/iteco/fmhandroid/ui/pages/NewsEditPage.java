@@ -4,64 +4,75 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 
 import android.view.View;
 import android.widget.TextView;
+
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
-import org.hamcrest.Matcher;
-import static org.hamcrest.Matchers.allOf;
 
+import org.hamcrest.Matcher;
 
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 
 public class NewsEditPage {
 
+    public static final int ADD_NEWS_BUTTON_ID = R.id.add_news_image_view;
+    public static final int FILTER_ICON_ID = R.id.filter_news_material_button;
+    public static final int SORT_BUTTON_ID = R.id.sort_news_material_button;
+    public static final int DELETE_ICON_ID = R.id.delete_news_item_image_view;
+    public static final int NEWS_CARD_ID = R.id.news_item_material_card_view;
+    public static final int PUBLICATION_DATE_TEXT_VIEW_ID = R.id.news_item_publication_date_text_view;
+    public static final int CREATION_DATE_TEXT_VIEW_ID = R.id.news_item_create_date_text_view;
+
     public void waitForPageLoaded() {
-        ViewUtils.waitForView(R.id.add_news_image_view, 10000);
+        ViewUtils.waitForView(ADD_NEWS_BUTTON_ID, 10000);
     }
 
     public void checkPageDisplayed() {
         waitForPageLoaded();
-        onView(withId(R.id.add_news_image_view)).check(matches(isDisplayed()));
+        onView(withId(ADD_NEWS_BUTTON_ID)).check(matches(isDisplayed()));
     }
 
-    public void clickAddNews() {
-        onView(withId(R.id.add_news_image_view)).perform(click());
+    public void addNews() {
+        onView(withId(ADD_NEWS_BUTTON_ID)).perform(click());
     }
 
-    public void clickFilter() {
-        onView(withId(R.id.filter_news_material_button)).perform(click());
+    public void openFilterScreen() {
+        onView(withId(FILTER_ICON_ID)).perform(click());
     }
 
-    public void clickSort() {
-        onView(withId(R.id.sort_news_material_button)).perform(click());
+    public void sortNews() {
+        onView(withId(SORT_BUTTON_ID)).perform(click());
     }
 
     public void deleteNews() {
         onView(withContentDescription("News delete button")).perform(click());
     }
+
     public void deleteNewsByTitle(String title) {
         onView(allOf(
-                withId(R.id.delete_news_item_image_view),
+                withId(DELETE_ICON_ID),
                 isDescendantOfA(
-                        allOf(withId(R.id.news_item_material_card_view),
+                        allOf(withId(NEWS_CARD_ID),
                                 hasDescendant(withText(title)))
                 )
         )).perform(click());
     }
+
     public String getPublicationDate(String title) {
         final String[] text = new String[1];
         onView(allOf(
-                withId(R.id.news_item_publication_date_text_view),
+                withId(PUBLICATION_DATE_TEXT_VIEW_ID),
                 isDescendantOfA(
-                        allOf(withId(R.id.news_item_material_card_view),
+                        allOf(withId(NEWS_CARD_ID),
                                 hasDescendant(withText(title)))
                 )
         )).perform(new ViewAction() {
@@ -86,9 +97,9 @@ public class NewsEditPage {
     public String getCreationDate(String title) {
         final String[] text = new String[1];
         onView(allOf(
-                withId(R.id.news_item_create_date_text_view),
+                withId(CREATION_DATE_TEXT_VIEW_ID),
                 isDescendantOfA(
-                        allOf(withId(R.id.news_item_material_card_view),
+                        allOf(withId(NEWS_CARD_ID),
                                 hasDescendant(withText(title)))
                 )
         )).perform(new ViewAction() {
