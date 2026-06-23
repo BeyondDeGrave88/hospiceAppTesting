@@ -16,10 +16,15 @@ public class MainPage {
 
     public static final int MAIN_MENU_BUTTON_ID = R.id.main_menu_image_button;
     public static final int AUTHORIZATION_BUTTON_ID = R.id.authorization_image_button;
+    public static final int QUOTES_BUTTON_ID = R.id.our_mission_image_button;
 
     public void openSideMenu() {
         ViewUtils.waitForView(MAIN_MENU_BUTTON_ID, 10000);
         onView(withId(MAIN_MENU_BUTTON_ID)).perform(click());
+    }
+    public void openQuotePage() {
+        ViewUtils.waitForView(QUOTES_BUTTON_ID, 10000);
+        onView(withId(QUOTES_BUTTON_ID)).perform(click());
     }
 
     public void openNews() {
