@@ -21,4 +21,6 @@ public class TestData {
     public static final String CONFIRM_DELETE_MESSAGE = "Are you sure you want to permanently delete the document? These changes cannot be reversed in the future.";
     public static final String CONFIRM_CANCEL_MESSAGE = "The changes won't be saved, do you really want to cancel?";
 
+    public static final String QUOTE_TITLE = "\"Хоспис для меня - это то, каким должен быть мир.\"";
+    public static final String QUOTE_DESCRIPTION = "\"Ну, идеальное устройство мира в моих глазах. Где никто не оценивает, никто не осудит, где говоришь, и тебя слышат, где, если страшно, тебя обнимут и возьмут за руку, а если холодно тебя согреют.\" Юля Капис, волонтер";
 }
