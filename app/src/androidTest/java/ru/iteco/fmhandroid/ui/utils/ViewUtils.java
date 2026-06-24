@@ -33,14 +33,4 @@ public class ViewUtils {
         }
         throw new AssertionError("View matching " + matcher + " not displayed within " + timeoutMillis + " ms");
     }
-
-
-    public static boolean isViewDisplayed(int viewId) {
-        try {
-            onView(withId(viewId)).check(matches(isDisplayed()));
-            return true;
-        } catch (Throwable t) {
-            return false;
-        }
-    }
 }
