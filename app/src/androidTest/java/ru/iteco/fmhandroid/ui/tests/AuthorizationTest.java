@@ -67,14 +67,14 @@ public class AuthorizationTest {
         mainPage.checkMainPageDisplayed();
     }
 
-    @Test//Баг - неоответсвие сообщения
+    @Test//Баг - несоответствие сообщения
     @Story("TC002 – Авторизация с неверным паролем")
     public void shouldNotLoginWithInvalidPassword() {
         authPage.login(TestData.VALID_LOGIN, TestData.WRONG_PASSWORD);
         authPage.checkWrongLoginAndPasswordError();
     }
 
-    @Test //Баг - неоответсвие сообщения
+    @Test //Баг - несоответствие сообщения
     @Story("TC003 – Авторизация с неверным логином")
     public void shouldNotLoginWithInvalidLogin() {
         authPage.login(TestData.WRONG_LOGIN, TestData.VALID_PASSWORD);
