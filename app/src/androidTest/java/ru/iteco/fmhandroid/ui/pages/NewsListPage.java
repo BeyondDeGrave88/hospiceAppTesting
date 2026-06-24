@@ -14,8 +14,6 @@ import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 public class NewsListPage {
 
     public static final int EDIT_NEWS_BUTTON_ID = R.id.edit_news_material_button;
-    public static final int EXPAND_BUTTON_ID = R.id.expand_material_button;
-    public static final int NEWS_LIST_RECYCLER_VIEW_ID = R.id.news_list_recycler_view;
     public static final int SWIPE_REFRESH_ID = R.id.news_list_swipe_refresh;
 
     public void waitForPageLoaded() {
@@ -29,14 +27,6 @@ public class NewsListPage {
 
     public void openEditPage() {
         onView(withId(EDIT_NEWS_BUTTON_ID)).perform(click());
-    }
-
-    public void expandNews() {
-        onView(withId(EXPAND_BUTTON_ID)).perform(click());
-    }
-
-    public void checkNewsListExists() {
-        onView(withId(NEWS_LIST_RECYCLER_VIEW_ID)).check(matches(isDisplayed()));
     }
 
     public void clickOnNewsTitle(String title) {
