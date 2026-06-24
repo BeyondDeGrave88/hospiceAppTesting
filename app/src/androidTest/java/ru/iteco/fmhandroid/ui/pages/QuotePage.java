@@ -7,7 +7,6 @@ import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtP
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
 
 import android.view.View;
 import android.widget.TextView;
@@ -45,7 +44,6 @@ public class QuotePage {
         clickExpandButton();
     }
 
-    // Проверка, что описание первой цитаты видимо
     public void checkDescriptionVisible() {
         onView(withId(RECYCLER_VIEW))
                 .perform(actionOnItemAtPosition(0, new ViewAction() {
@@ -76,7 +74,6 @@ public class QuotePage {
                 }));
     }
 
-    // Проверка, что описание первой цитаты скрыто (GONE или отсутствует)
     public void checkDescriptionHidden() {
         onView(withId(RECYCLER_VIEW))
                 .perform(actionOnItemAtPosition(0, new ViewAction() {
@@ -93,7 +90,6 @@ public class QuotePage {
                     @Override
                     public void perform(UiController uiController, View view) {
                         View descView = view.findViewById(DESCRIPTION_VIEW);
-                        // Если descView == null или его visibility != VISIBLE, считаем скрытым
                         if (descView != null && descView.getVisibility() == View.VISIBLE) {
                             throw new PerformException.Builder()
                                     .withActionDescription("Description is visible, but expected hidden")
@@ -103,7 +99,6 @@ public class QuotePage {
                 }));
     }
 
-    // Проверка, что заголовок первой цитаты виден
     public void checkTitleVisible() {
         onView(withId(RECYCLER_VIEW))
                 .perform(actionOnItemAtPosition(0, new ViewAction() {
@@ -129,7 +124,6 @@ public class QuotePage {
                 }));
     }
 
-    // Получение текста заголовка первой цитаты (без Ambiguous ошибок)
     public String getFirstQuoteTitle() {
         final String[] text = new String[1];
         onView(withId(RECYCLER_VIEW))
@@ -155,7 +149,6 @@ public class QuotePage {
         return text[0];
     }
 
-    // Получение текста описания первой цитаты (после раскрытия)
     public String getFirstQuoteDescription() {
         final String[] text = new String[1];
         onView(withId(RECYCLER_VIEW))
