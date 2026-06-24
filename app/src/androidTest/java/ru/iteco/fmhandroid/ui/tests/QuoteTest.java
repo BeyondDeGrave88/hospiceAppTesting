@@ -3,13 +3,11 @@ package ru.iteco.fmhandroid.ui.tests;
 import static org.junit.Assert.assertEquals;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Story;
