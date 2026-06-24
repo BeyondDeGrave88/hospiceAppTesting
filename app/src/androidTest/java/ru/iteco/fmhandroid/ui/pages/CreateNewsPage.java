@@ -2,6 +2,7 @@ package ru.iteco.fmhandroid.ui.pages;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
@@ -17,6 +18,8 @@ import static org.hamcrest.Matchers.is;
 
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.utils.ViewUtils;
+import ru.iteco.fmhandroid.ui.utils.ToastMatcher;
+
 
 public class CreateNewsPage {
 
@@ -48,6 +51,10 @@ public class CreateNewsPage {
         onView(withId(TITLE_EDIT_TEXT))
                 .perform(replaceText(title), closeSoftKeyboard());
     }
+    public void clearTitle(String title) {
+        onView(withId(TITLE_EDIT_TEXT))
+                .perform(clearText(), closeSoftKeyboard());
+    }
 
     public void enterPublicationDate() {
         onView(withId(PUBLICATION_DATE_EDIT_TEXT)).perform(click());
@@ -74,5 +81,10 @@ public class CreateNewsPage {
 
     public void clickCancel() {
         onView(withId(CANCEL_BUTTON_ID)).perform(scrollTo(), click());
+    }
+    public void checkToastMessage(String expectedMessage) {
+        onView(withText(expectedMessage))
+                .inRoot(new ToastMatcher())
+                .check(matches(isDisplayed()));
     }
 }
