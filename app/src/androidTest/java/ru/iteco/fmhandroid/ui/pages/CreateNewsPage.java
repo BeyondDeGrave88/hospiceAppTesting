@@ -16,10 +16,10 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
+import io.qameta.allure.Step;
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 import ru.iteco.fmhandroid.ui.utils.ToastMatcher;
-
 
 public class CreateNewsPage {
 
@@ -31,15 +31,18 @@ public class CreateNewsPage {
     public static final int SAVE_BUTTON_ID = R.id.save_button;
     public static final int CANCEL_BUTTON_ID = R.id.cancel_button;
 
+    @Step("Ожидание загрузки страницы создания новости")
     public void waitForPageLoaded() {
         ViewUtils.waitForView(TITLE_EDIT_TEXT, 10000);
     }
 
+    @Step("Проверка отображения страницы создания новости")
     public void checkPageDisplayed() {
         waitForPageLoaded();
         onView(withId(TITLE_EDIT_TEXT)).check(matches(isDisplayed()));
     }
 
+    @Step("Выбор категории {category}")
     public void selectCategory(String category) {
         onView(withId(CATEGORY_AUTO_COMPLETE_TEXT_VIEW)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(category)))
@@ -47,41 +50,52 @@ public class CreateNewsPage {
                 .perform(click());
     }
 
+    @Step("Ввод заголовка {title}")
     public void enterTitle(String title) {
         onView(withId(TITLE_EDIT_TEXT))
                 .perform(replaceText(title), closeSoftKeyboard());
     }
-    public void clearTitle(String title) {
+
+    @Step("Очистка поля заголовка")
+    public void clearTitle() {
         onView(withId(TITLE_EDIT_TEXT))
                 .perform(clearText(), closeSoftKeyboard());
     }
 
+    @Step("Ввод даты публикации (текущая дата через DatePicker)")
     public void enterPublicationDate() {
         onView(withId(PUBLICATION_DATE_EDIT_TEXT)).perform(click());
         onView(withId(android.R.id.button1)).perform(click());
     }
 
+    @Step("Ввод даты публикации {date}")
     public void enterPublicationDate(String date) {
         onView(withId(PUBLICATION_DATE_EDIT_TEXT))
                 .perform(replaceText(date), closeSoftKeyboard());
     }
 
+    @Step("Ввод времени (текущее время)")
     public void enterTime() {
         onView(withId(PUBLICATION_TIME_EDIT_TEXT)).perform(click());
         onView(withId(android.R.id.button1)).perform(click());
     }
 
+    @Step("Ввод описания {description}")
     public void enterDescription(String description) {
         onView(withId(DESCRIPTION_EDIT_TEXT)).perform(replaceText(description));
     }
 
+    @Step("Нажатие кнопки 'Сохранить'")
     public void clickSave() {
         onView(withId(SAVE_BUTTON_ID)).perform(scrollTo(), click());
     }
 
+    @Step("Нажатие кнопки 'Отмена'")
     public void clickCancel() {
         onView(withId(CANCEL_BUTTON_ID)).perform(scrollTo(), click());
     }
+
+    @Step("Проверка Toast-сообщения: {expectedMessage}")
     public void checkToastMessage(String expectedMessage) {
         onView(withText(expectedMessage))
                 .inRoot(new ToastMatcher())

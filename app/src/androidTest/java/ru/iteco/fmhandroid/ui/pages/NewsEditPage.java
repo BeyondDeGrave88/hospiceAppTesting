@@ -17,9 +17,9 @@ import android.widget.TextView;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 
-
 import org.hamcrest.Matcher;
 
+import io.qameta.allure.Step;
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 
@@ -35,22 +35,27 @@ public class NewsEditPage {
     public static final int NEWS_LIST_RECYCLER_VIEW_ID = R.id.news_list_recycler_view;
     public static final int NEWS_ITEM_TITLE_TEXT_VIEW_ID = R.id.news_item_title_text_view;
 
+    @Step("Ожидание загрузки страницы редактирования новостей")
     public void waitForPageLoaded() {
         ViewUtils.waitForView(ADD_NEWS_BUTTON_ID, 10000);
     }
 
+    @Step("Нажатие кнопки 'Добавить новость'")
     public void addNews() {
         onView(withId(ADD_NEWS_BUTTON_ID)).perform(click());
     }
 
+    @Step("Открытие экрана фильтра")
     public void openFilterScreen() {
         onView(withId(FILTER_ICON_ID)).perform(click());
     }
 
+    @Step("Сортировка новостей (переключение порядка)")
     public void sortNews() {
         onView(withId(SORT_BUTTON_ID)).perform(click());
     }
 
+    @Step("Удаление новости с заголовком {title}")
     public void deleteNewsByTitle(String title) {
         onView(allOf(
                 withId(DELETE_ICON_ID),
@@ -61,6 +66,7 @@ public class NewsEditPage {
         )).perform(click());
     }
 
+    @Step("Получение даты публикации новости с заголовком {title}")
     public String getPublicationDate(String title) {
         final String[] text = new String[1];
         onView(allOf(
@@ -88,6 +94,7 @@ public class NewsEditPage {
         return text[0];
     }
 
+    @Step("Получение даты создания новости с заголовком {title}")
     public String getCreationDate(String title) {
         final String[] text = new String[1];
         onView(allOf(
@@ -115,6 +122,7 @@ public class NewsEditPage {
         return text[0];
     }
 
+    @Step("Получение заголовка новости на позиции {position}")
     public String getNewsTitleAtPosition(int position) {
         final String[] text = new String[1];
         onView(withId(NEWS_LIST_RECYCLER_VIEW_ID))
@@ -139,6 +147,8 @@ public class NewsEditPage {
                 }));
         return text[0];
     }
+
+    @Step("Проверка, что новость с заголовком {title} не существует")
     public void checkNewsDoesNotExist(String title) {
         onView(allOf(
                 withId(NEWS_CARD_ID),
