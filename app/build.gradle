@@ -19,7 +19,7 @@ android {
         targetSdkVersion 32
         versionCode 14
         versionName "1.0.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "io.qameta.allure.android.runners.AllureAndroidJUnitRunner"
     }
 
     compileOptions {
@@ -27,6 +27,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -94,14 +95,17 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
     testImplementation 'junit:junit:4.13.2'
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.4.0'
 
-    androidTestImplementation "io.qameta.allure:allure-kotlin-model:2.4.0"
-    androidTestImplementation "io.qameta.allure:allure-kotlin-commons:2.4.0"
-    androidTestImplementation "io.qameta.allure:allure-kotlin-junit4:2.4.0"
-    androidTestImplementation "io.qameta.allure:allure-kotlin-android:2.4.0"
+// Allure Java
+    androidTestImplementation "io.qameta.allure:allure-java-commons:2.24.0"
+    androidTestImplementation "io.qameta.allure:allure-model:2.24.0"
+    androidTestImplementation "io.qameta.allure:allure-junit4:2.24.0"
 
+// Для ScreenshotRule и LogcatRule
+    androidTestImplementation "io.qameta.allure:allure-kotlin-android:2.4.0"
 }
