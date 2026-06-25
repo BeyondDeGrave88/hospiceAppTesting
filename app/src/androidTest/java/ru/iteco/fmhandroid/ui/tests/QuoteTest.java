@@ -8,7 +8,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import io.qameta.allure.android.rules.LogcatRule;
+import io.qameta.allure.android.rules.ScreenshotRule;
+import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Story;
 
@@ -18,6 +22,7 @@ import ru.iteco.fmhandroid.ui.pages.AuthorizationPage;
 import ru.iteco.fmhandroid.ui.pages.MainPage;
 import ru.iteco.fmhandroid.ui.pages.QuotePage;
 
+@RunWith(AllureAndroidJUnit4.class)
 @Epic("Цитаты")
 public class QuoteTest {
 
@@ -28,6 +33,12 @@ public class QuoteTest {
     @Rule
     public ActivityScenarioRule<AppActivity> activityScenarioRule =
             new ActivityScenarioRule<>(AppActivity.class);
+
+    @Rule
+    public ScreenshotRule screenshotRule = new ScreenshotRule();
+
+    @Rule
+    public LogcatRule logcatRule = new LogcatRule();
 
     private boolean isLoggedIn() {
         if (authPage.isAuthPageDisplayed()) {

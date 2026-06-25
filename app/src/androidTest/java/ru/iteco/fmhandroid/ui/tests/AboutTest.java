@@ -15,16 +15,22 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import io.qameta.allure.kotlin.Epic;
-import io.qameta.allure.kotlin.Story;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Story;
+import io.qameta.allure.android.rules.ScreenshotRule;
+import io.qameta.allure.android.rules.LogcatRule;
+import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 
+import io.qameta.allure.kotlin.Allure;
 import ru.iteco.fmhandroid.ui.AppActivity;
 import ru.iteco.fmhandroid.ui.data.TestData;
 import ru.iteco.fmhandroid.ui.pages.AboutPage;
 import ru.iteco.fmhandroid.ui.pages.AuthorizationPage;
 import ru.iteco.fmhandroid.ui.pages.MainPage;
 
+@RunWith(AllureAndroidJUnit4.class)
 @Epic("О приложении")
 public class AboutTest {
 
@@ -35,6 +41,12 @@ public class AboutTest {
     @Rule
     public ActivityScenarioRule<AppActivity> activityScenarioRule =
             new ActivityScenarioRule<>(AppActivity.class);
+
+    @Rule
+    public ScreenshotRule screenshotRule = new ScreenshotRule();
+
+    @Rule
+    public LogcatRule logcatRule = new LogcatRule();
 
     private boolean isLoggedIn() {
         try {
@@ -49,6 +61,8 @@ public class AboutTest {
 
     @Before
     public void setUp() {
+        Allure.label("epic", "О приложении");
+
         authPage = new AuthorizationPage();
         mainPage = new MainPage();
         aboutPage = new AboutPage();
@@ -90,6 +104,7 @@ public class AboutTest {
     @Test
     @Story("TC027 – Переход на страницу About (проверка элементов)")
     public void shouldNavigateToAboutAndCheckElements() {
+        Allure.label("story", "TC027 – Переход на страницу About (проверка элементов)");
         mainPage.openAbout();
         aboutPage.checkPageDisplayed();
         aboutPage.checkPrivacyPolicyLinkDisplayed();
@@ -99,6 +114,7 @@ public class AboutTest {
     @Test
     @Story("TC028 – Переход по ссылке «Политика конфиденциальности»")
     public void shouldOpenPrivacyPolicyLink() {
+        Allure.label("story", "TC028 – Переход по ссылке «Политика конфиденциальности»");
         mainPage.openAbout();
         aboutPage.checkPageDisplayed();
 
@@ -113,6 +129,7 @@ public class AboutTest {
     @Test
     @Story("TC029 – Переход по ссылке «Пользовательское соглашение»")
     public void shouldOpenTermsOfUseLink() {
+        Allure.label("story", "TC029 – Переход по ссылке «Пользовательское соглашение»");
         mainPage.openAbout();
         aboutPage.checkPageDisplayed();
 

@@ -4,7 +4,6 @@ import static androidx.test.espresso.Espresso.pressBack;
 
 import androidx.test.espresso.NoActivityResumedException;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
@@ -12,8 +11,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import io.qameta.allure.android.rules.LogcatRule;
+import io.qameta.allure.android.rules.ScreenshotRule;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Story;
+import io.qameta.allure.android.runners.AllureAndroidJUnit4;
+
 
 import ru.iteco.fmhandroid.ui.AppActivity;
 import ru.iteco.fmhandroid.ui.data.TestData;
@@ -22,7 +25,7 @@ import ru.iteco.fmhandroid.ui.pages.AuthorizationPage;
 import ru.iteco.fmhandroid.ui.pages.MainPage;
 import ru.iteco.fmhandroid.ui.pages.NewsListPage;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(AllureAndroidJUnit4.class)
 @Epic("Навигация")
 public class NavigationTest {
     private AuthorizationPage authPage;
@@ -33,6 +36,12 @@ public class NavigationTest {
     @Rule
     public ActivityScenarioRule<AppActivity> activityScenarioRule =
             new ActivityScenarioRule<>(AppActivity.class);
+
+    @Rule
+    public ScreenshotRule screenshotRule = new ScreenshotRule();
+
+    @Rule
+    public LogcatRule logcatRule = new LogcatRule();
 
     private boolean isLoggedIn() {
         if (authPage.isAuthPageDisplayed()) {

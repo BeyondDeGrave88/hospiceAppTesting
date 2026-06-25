@@ -12,7 +12,6 @@ import static org.junit.Assert.assertEquals;
 import static ru.iteco.fmhandroid.ui.data.TestData.SAVING_FAILED_ERROR;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,6 +21,9 @@ import org.junit.runner.RunWith;
 
 import java.util.Collections;
 
+import io.qameta.allure.android.rules.LogcatRule;
+import io.qameta.allure.android.rules.ScreenshotRule;
+import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Story;
 
@@ -35,7 +37,7 @@ import ru.iteco.fmhandroid.ui.pages.NewsEditPage;
 import ru.iteco.fmhandroid.ui.pages.NewsListPage;
 import ru.iteco.fmhandroid.ui.utils.DateUtils;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(AllureAndroidJUnit4.class)
 @Epic("Новости")
 public class NewsTest {
 
@@ -49,6 +51,12 @@ public class NewsTest {
     @Rule
     public ActivityScenarioRule<AppActivity> activityScenarioRule =
             new ActivityScenarioRule<>(AppActivity.class);
+
+    @Rule
+    public ScreenshotRule screenshotRule = new ScreenshotRule();
+
+    @Rule
+    public LogcatRule logcatRule = new LogcatRule();
 
     private boolean isLoggedIn() {
         if (authPage.isAuthPageDisplayed()) {
@@ -510,7 +518,7 @@ public class NewsTest {
         createNewsPage.waitForPageLoaded();
 
         createNewsPage.selectCategory("Профсоюз");
-        createNewsPage.clearTitle("Профсоюз");
+        createNewsPage.clearTitle();
         createNewsPage.enterPublicationDate();
         createNewsPage.enterTime();
         createNewsPage.enterDescription("Описание");
