@@ -65,12 +65,12 @@
 
 | Файл | Содержание |
 |------|-------------|
-| `Plan.md` | Данный план тестирования |
-| `Check.xlsx` | Чек-лист с отметками о прохождении/непрохождении тестов |
-| `Cases.xlsx` | Тест-кейсы с шагами, ожидаемым результатом и отметкой о покрытии с указанием причин, почему тест-кейс не может быть покрыт |
-| `allure-results.zip` | Сгенерированный отчёт Allure |
-| `Readme.md` | Описание процедуры запуска авто-тестов |
-| `Result.md` | Результат сравнения времени проверки приложения по чек-листу руками и UI-тестами. |
+| [Plan.md](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/82553ba8143750339fc1e879f39de921a586019f/docs/Plan.md) | Данный план тестирования |
+| [Check.xlsx](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/82553ba8143750339fc1e879f39de921a586019f/docs/Check.xlsx) | Чек-лист с отметками о прохождении/непрохождении тестов |
+| [Cases.xlsx](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/82553ba8143750339fc1e879f39de921a586019f/docs/Cases.xlsx) | Тест-кейсы с шагами, ожидаемым результатом и отметкой о покрытии с указанием причин, почему тест-кейс не может быть покрыт |
+| [allure-results.zip](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/82553ba8143750339fc1e879f39de921a586019f/docs/allure-results.zip) | Сгенерированный отчёт Allure |
+| [README.md](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/82553ba8143750339fc1e879f39de921a586019f/docs/README.md) | Описание процедуры запуска авто-тестов |
+| [Result.md](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/82553ba8143750339fc1e879f39de921a586019f/docs/Result.md) | Результат сравнения времени проверки приложения по чек-листу руками и UI-тестами. |
 
 Все файлы размещены в корне репозитория.
 
