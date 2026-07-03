@@ -53,4 +53,25 @@ public class FilterNewsPage {
     public void applyFilter() {
         onView(withId(APPLY_FILTER_BUTTON_ID)).perform(click());
     }
+
+    @Step("Применить фильтр по диапазону дат: {start} - {end}")
+    public void filterByDateRange(String startDate, String endDate) {
+        waitForPageLoaded();
+        setStartDate(startDate);
+        setEndDate(endDate);
+        applyFilter();
+    }
+
+    @Step("Применить фильтр по категории: {category}")
+    public void filterByCategory(String category) {
+        waitForPageLoaded();
+        selectCategory(category);
+        applyFilter();
+    }
+    @Step("Сбросить фильтр (очистить категорию)")
+    public void resetFilter() {
+        waitForPageLoaded();
+        clearCategory();
+        applyFilter();
+    }
 }
