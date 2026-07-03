@@ -12,12 +12,14 @@ import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
 import io.qameta.allure.Step;
 import ru.iteco.fmhandroid.R;
+import ru.iteco.fmhandroid.ui.data.TestData;
 import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 import ru.iteco.fmhandroid.ui.utils.ToastMatcher;
 
@@ -100,5 +102,75 @@ public class CreateNewsPage {
         onView(withText(expectedMessage))
                 .inRoot(new ToastMatcher())
                 .check(matches(isDisplayed()));
+    }
+
+    @Step("Попытка создания новости без заполнения поля Category")
+    public void attemptCreateWithoutCategory(String title, String publicationDate, String description) {
+        enterTitle(title);
+        enterPublicationDate(publicationDate);
+        enterTime();
+        enterDescription(description);
+        clickSave();
+    }
+
+    @Step("Попытка создания новости без заполнения поля Description")
+    public void attemptCreateWithoutDescription(String category, String title, String publicationDate) {
+        selectCategory(category);
+        enterTitle(title);
+        enterPublicationDate(publicationDate);
+        enterTime();
+
+        clickSave();
+    }
+
+    @Step("Попытка создания новости без заполнения поля Publication date")
+    public void attemptCreateWithoutPublicationDate(String category, String title, String description) {
+        selectCategory(category);
+        enterTitle(title);
+
+        enterTime();
+        enterDescription(description);
+        clickSave();
+    }
+
+    @Step("Попытка создания новости без заполнения поля Time")
+    public void attemptCreateWithoutTime(String category, String title, String publicationDate, String description) {
+        selectCategory(category);
+        enterTitle(title);
+        enterPublicationDate(publicationDate);
+
+        enterDescription(description);
+        clickSave();
+    }
+
+    @Step("Попытка создания новости без заполнения поля Title")
+    public void attemptCreateWithoutTitle(String category, String publicationDate, String description) {
+        selectCategory(category);
+        clearTitle();
+        enterPublicationDate(publicationDate);
+        enterTime();
+        enterDescription(description);
+        clickSave();
+    }
+
+    @Step("Попытка создания новости со всеми пустыми полями")
+    public void attemptCreateWithAllEmpty() {
+        clickSave();
+    }
+
+    @Step("Проверка отображения ошибки и того, что страница создания всё ещё открыта")
+    public void checkCreationErrorAndPageDisplayed(String expectedErrorMessage) {
+        checkToastMessage(expectedErrorMessage);
+        checkPageDisplayed();
+    }
+    @Step("Отмена создания новости с подтверждением")
+    public void cancelCreationWithConfirmation() {
+        clickCancel();
+        onView(withText(TestData.CONFIRM_CANCEL_MESSAGE))
+                .inRoot(isDialog())
+                .check(matches(isDisplayed()));
+        onView(withText(TestData.OK_BUTTON_TEXT))
+                .inRoot(isDialog())
+                .perform(click());
     }
 }
