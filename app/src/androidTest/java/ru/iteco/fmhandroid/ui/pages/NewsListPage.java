@@ -33,13 +33,21 @@ public class NewsListPage {
         onView(withId(EDIT_NEWS_BUTTON_ID)).perform(click());
     }
 
-    @Step("Клик по заголовку новости {title} для раскрытия описания")
-    public void clickOnNewsTitle(String title) {
-        onView(withText(title)).perform(click());
-    }
-
     @Step("Обновление списка новостей (swipe-to-refresh)")
     public void refreshNewsList() {
         onView(withId(SWIPE_REFRESH_ID)).perform(swipeDown());
+    }
+
+    @Step("Проверка заголовка, категории и даты новости")
+    public void checkNewsDetails(String title, String category, String date) {
+        onView(withText(title)).check(matches(isDisplayed()));
+        onView(withText(category)).check(matches(isDisplayed()));
+        onView(withText(date)).check(matches(isDisplayed()));
+    }
+
+    @Step("Проверка описания новости с заголовком {title} после раскрытия")
+    public void checkNewsDescription(String title, String description) {
+        onView(withText(title)).perform(click());
+        onView(withText(description)).check(matches(isDisplayed()));
     }
 }
