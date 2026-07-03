@@ -83,4 +83,12 @@ public class MainPage {
             return false;
         }
     }
+
+    @Step("Открытие панели управления новостями")
+    public void openNewsControlPanel() {
+        openNews();
+        NewsListPage newsListPage = new NewsListPage();
+        newsListPage.waitForPageLoaded();
+        newsListPage.openEditPage();
+    }
 }
