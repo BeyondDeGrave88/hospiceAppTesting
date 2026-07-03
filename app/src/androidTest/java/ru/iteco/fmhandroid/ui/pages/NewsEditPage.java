@@ -3,11 +3,14 @@ package ru.iteco.fmhandroid.ui.pages;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.hamcrest.Matchers.allOf;
 import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 
@@ -21,6 +24,7 @@ import org.hamcrest.Matcher;
 
 import io.qameta.allure.Step;
 import ru.iteco.fmhandroid.R;
+import ru.iteco.fmhandroid.ui.data.TestData;
 import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 
 public class NewsEditPage {
@@ -34,6 +38,9 @@ public class NewsEditPage {
     public static final int CREATION_DATE_TEXT_VIEW_ID = R.id.news_item_create_date_text_view;
     public static final int NEWS_LIST_RECYCLER_VIEW_ID = R.id.news_list_recycler_view;
     public static final int NEWS_ITEM_TITLE_TEXT_VIEW_ID = R.id.news_item_title_text_view;
+    public static final int EDIT_ICON_ID = R.id.edit_news_item_image_view;
+
+
 
     @Step("Ожидание загрузки страницы редактирования новостей")
     public void waitForPageLoaded() {
@@ -50,9 +57,14 @@ public class NewsEditPage {
         onView(withId(FILTER_ICON_ID)).perform(click());
     }
 
-    @Step("Сортировка новостей (переключение порядка)")
-    public void sortNews() {
+    @Step("Сортировка новостей и ожидание появления новости с заголовком {title}")
+    public void sortNews(String title) {
         onView(withId(SORT_BUTTON_ID)).perform(click());
+
+        ViewUtils.waitForView(allOf(withId(NEWS_CARD_ID), hasDescendant(withText(title))), 10000);
+
+        onView(allOf(withId(NEWS_CARD_ID), hasDescendant(withText(title))))
+                .check(matches(isDisplayed()));
     }
 
     @Step("Удаление новости с заголовком {title}")
@@ -154,5 +166,88 @@ public class NewsEditPage {
                 withId(NEWS_CARD_ID),
                 hasDescendant(withText(title))
         )).check(doesNotExist());
+    }
+
+    @Step("Создание новости с сегодняшней датой")
+    public void createNewsToday(String title, String category, String description) {
+        addNews();
+        CreateNewsPage createPage = new CreateNewsPage();
+        createPage.waitForPageLoaded();
+        createPage.selectCategory(category);
+        createPage.enterTitle(title);
+        createPage.enterPublicationDate();
+        createPage.enterTime();
+        createPage.enterDescription(description);
+        createPage.clickSave();
+        waitForPageLoaded();
+    }
+
+    @Step("Создание новости с указанной датой")
+    public void createNewsWithDate(String title, String category, String description, String date) {
+        addNews();
+        CreateNewsPage createPage = new CreateNewsPage();
+        createPage.waitForPageLoaded();
+        createPage.selectCategory(category);
+        createPage.enterTitle(title);
+        createPage.enterPublicationDate(date);
+        createPage.enterTime();
+        createPage.enterDescription(description);
+        createPage.clickSave();
+        waitForPageLoaded();
+    }
+
+    @Step("Редактирование новости с заголовком {oldTitle}. Новый заголовок: {newTitle}, новое описание: {newDescription}")
+    public void editNewsByTitle(String oldTitle, String newTitle, String newDescription) {
+        onView(allOf(
+                withId(EDIT_ICON_ID),
+                isDescendantOfA(
+                        allOf(withId(NEWS_CARD_ID),
+                                hasDescendant(withText(oldTitle)))
+                )
+        )).perform(click());
+
+        CreateNewsPage createPage = new CreateNewsPage();
+        createPage.waitForPageLoaded();
+        createPage.enterTitle(newTitle);
+        createPage.enterDescription(newDescription);
+        createPage.clickSave();
+        waitForPageLoaded();
+
+        ViewUtils.waitForView(allOf(withId(NEWS_CARD_ID), hasDescendant(withText(newTitle))), 10000);
+    }
+
+    @Step("Проверка, что новость с заголовком {title} существует и видна")
+    public void checkNewsExists(String title) {
+        onView(allOf(withId(NEWS_CARD_ID), hasDescendant(withText(title))))
+                .check(matches(isDisplayed()));
+    }
+
+    @Step("Проверка описания новости с заголовком {title} после раскрытия")
+    public void checkNewsDescription(String title, String description) {
+        onView(allOf(withId(NEWS_CARD_ID), hasDescendant(withText(title))))
+                .perform(click());
+        onView(allOf(
+                withId(R.id.news_item_description_text_view),
+                isDescendantOfA(
+                        allOf(withId(NEWS_CARD_ID), hasDescendant(withText(title)))
+                )
+        )).check(matches(withText(description)));
+    }
+    @Step("Подтверждение удаления новости (нажатие OK)")
+    public void confirmDelete() {
+        onView(withText(TestData.CONFIRM_DELETE_MESSAGE))
+                .inRoot(isDialog())
+                .check(matches(isDisplayed()));
+        onView(withText(TestData.OK_BUTTON_TEXT)).perform(click());
+    }
+
+    @Step("Отмена удаления новости (нажатие Cancel)")
+    public void cancelDelete() {
+        onView(withText(TestData.CONFIRM_DELETE_MESSAGE))
+                .inRoot(isDialog())
+                .check(matches(isDisplayed()));
+        onView(withText(TestData.CANCEL_BUTTON_TEXT))
+                .inRoot(isDialog())
+                .perform(click());
     }
 }
