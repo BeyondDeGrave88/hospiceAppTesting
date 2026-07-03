@@ -1,15 +1,9 @@
 package ru.iteco.fmhandroid.ui.tests;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.isDialog;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.assertEquals;
 
 import static ru.iteco.fmhandroid.ui.data.TestData.SAVING_FAILED_ERROR;
+import static ru.iteco.fmhandroid.ui.data.TestData.XSS_PAYLOAD;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
@@ -92,90 +86,46 @@ public class NewsTest {
 
     @After
     public void tearDown() {
-        if (isLoggedIn()) {
-            mainPage.logout();
-            authPage.waitForPageLoaded();
-        }
-    }
-
-    private void openNewsControlPanel() {
-        mainPage.openNews();
-        newsListPage.checkPageDisplayed();
-        newsListPage.openEditPage();
-        newsEditPage.waitForPageLoaded();
-    }
-
-    private void createTestNewsToday(String title, String category, String description) {
-        newsEditPage.addNews();
-        createNewsPage.waitForPageLoaded();
-        createNewsPage.selectCategory(category);
-        createNewsPage.enterTitle(title);
-        createNewsPage.enterPublicationDate();
-        createNewsPage.enterTime();
-        createNewsPage.enterDescription(description);
-        createNewsPage.clickSave();
-        newsEditPage.waitForPageLoaded();
-    }
-
-    private void createTestNews(String title, String category, String description, String date) {
-        newsEditPage.addNews();
-        createNewsPage.waitForPageLoaded();
-        createNewsPage.selectCategory(category);
-        createNewsPage.enterTitle(title);
-        createNewsPage.enterPublicationDate(date);
-        createNewsPage.enterTime();
-        createNewsPage.enterDescription(description);
-        createNewsPage.clickSave();
-        newsEditPage.waitForPageLoaded();
     }
 
     @Test  // Баг – новость не отображается на главной странице News
     @Story("TC011 – Новость содержит заголовок, дату, категорию, комментарий")
     public void shouldDisplayNewsTitleDateCategoryAndComment() {
-        String title = "Праздник" + System.currentTimeMillis();;
+        String title = "Праздник" + System.currentTimeMillis();
         String category = "Праздник";
         String description = "Описание";
 
-        openNewsControlPanel();
-        createTestNewsToday(title, category, description);
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsToday(title, category, description);
 
         mainPage.openNews();
         newsListPage.waitForPageLoaded();
         newsListPage.refreshNewsList();
 
-        onView(withText(title)).check(matches(isDisplayed()));
-        onView(withText(category)).check(matches(isDisplayed()));
-        onView(withText(DateUtils.getToday())).check(matches(isDisplayed()));
-
-        newsListPage.clickOnNewsTitle(title);
-        onView(withText(description)).check(matches(isDisplayed()));
+        newsListPage.checkNewsDetails(title, category, DateUtils.getToday());
+        newsListPage.checkNewsDescription(title, description);
     }
 
     @Test
     @Story("TC012 – Создание новости со всеми заполненными полями")
     public void shouldCreateNewsWithAllFilledFields() {
-        String title = "Объявление" + System.currentTimeMillis();;
+        String title = "Объявление" + System.currentTimeMillis();
         String category = "Объявление";
         String description = "Описание";
 
-        openNewsControlPanel();
-        createTestNewsToday(title, category, description);
-
-        newsEditPage.sortNews();
-        onView(withText(title)).check(matches(isDisplayed()));
-        onView(withText(category)).check(matches(isDisplayed()));
-        onView(withText(DateUtils.getToday())).check(matches(isDisplayed()));
-
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsToday(title, category, description);
+        newsEditPage.sortNews(title);
     }
 
     @Test // Баг – текст диалога не соответствует ожидаемому (используется "log out")
     @Story("TC013 – Нажатие кнопки Cancel вместо Save при создании новости")
     public void shouldCancelNewsCreation() {
-        String title = "Массаж" + System.currentTimeMillis();;
+        String title = "Массаж" + System.currentTimeMillis();
         String category = "Массаж";
         String description = "Описание";
 
-        openNewsControlPanel();
+        mainPage.openNewsControlPanel();
         newsEditPage.addNews();
         createNewsPage.waitForPageLoaded();
         createNewsPage.selectCategory(category);
@@ -184,92 +134,60 @@ public class NewsTest {
         createNewsPage.enterTime();
         createNewsPage.enterDescription(description);
 
-        createNewsPage.clickCancel();
-
-        onView(withText(TestData.CONFIRM_CANCEL_MESSAGE))
-                .inRoot(isDialog())
-                .check(matches(isDisplayed()));
-
-        onView(withText(TestData.OK_BUTTON_TEXT)).perform(click());
+        createNewsPage.cancelCreationWithConfirmation();
 
         newsEditPage.waitForPageLoaded();
-        newsEditPage.sortNews();
-
-        onView(withText(title)).check(doesNotExist());
+        newsEditPage.sortNews(title);
+        newsEditPage.checkNewsDoesNotExist(title);
     }
 
     @Test
     @Story("TC014 – Нажатие кнопки Ok при удалении новости")
     public void shouldDeleteNewsWithOk() {
-        String title = "Зарплата" + System.currentTimeMillis();;
+        String title = "Зарплата" + System.currentTimeMillis();
         String category = "Зарплата";
         String description = "Описание";
 
-        openNewsControlPanel();
-        createTestNewsToday(title, category, description);
-        newsEditPage.sortNews();
-
-        onView(withText(title)).check(matches(isDisplayed()));
-
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsToday(title, category, description);
+        newsEditPage.sortNews(title);
         newsEditPage.deleteNewsByTitle(title);
-
-        onView(withText(TestData.CONFIRM_DELETE_MESSAGE))
-                .inRoot(isDialog())
-                .check(matches(isDisplayed()));
-
-        onView(withText(TestData.OK_BUTTON_TEXT)).perform(click());
+        newsEditPage.confirmDelete();
 
         newsEditPage.waitForPageLoaded();
-        newsEditPage.sortNews();
-
-        onView(withText(title)).check(doesNotExist());
+        newsEditPage.checkNewsDoesNotExist(title);
     }
 
     @Test
     @Story("TC015 – Нажатие кнопки Cancel при удалении новости")
     public void shouldCancelDeleteNews() {
-        String title = "Профсоюз" + System.currentTimeMillis();;
+        String title = "Профсоюз" + System.currentTimeMillis();
         String category = "Профсоюз";
         String description = "Описание";
 
-        openNewsControlPanel();
-        createTestNewsToday(title, category, description);
-        newsEditPage.sortNews();
-
-        onView(withText(title)).check(matches(isDisplayed()));
-
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsToday(title, category, description);
+        newsEditPage.sortNews(title);
         newsEditPage.deleteNewsByTitle(title);
-
-        onView(withText(TestData.CONFIRM_DELETE_MESSAGE))
-                .inRoot(isDialog())
-                .check(matches(isDisplayed()));
-
-        onView(withText(TestData.CANCEL_BUTTON_TEXT)).perform(click());
+        newsEditPage.cancelDelete();
 
         newsEditPage.waitForPageLoaded();
-
-        onView(withText(title)).check(matches(isDisplayed()));
+        newsEditPage.checkNewsExists(title);
     }
 
     @Test
     @Story("TC016 – Фильтрация новостей за сегодня")
     public void shouldFilterNewsToday() {
-        String title = "Праздник" + System.currentTimeMillis();;
+        String title = "Праздник" + System.currentTimeMillis();
         String category = "Праздник";
         String description = "Описание";
 
-        openNewsControlPanel();
-        createTestNewsToday(title, category, description);
-
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsToday(title, category, description);
         newsEditPage.openFilterScreen();
-        filterNewsPage.waitForPageLoaded();
+        filterNewsPage.filterByDateRange(DateUtils.getToday(), DateUtils.getToday());
 
-        filterNewsPage.setStartDate(DateUtils.getToday());
-        filterNewsPage.setEndDate(DateUtils.getToday());
-
-        filterNewsPage.applyFilter();
-
-        onView(withText(title)).check(matches(isDisplayed()));
+        newsEditPage.checkNewsExists(title);
     }
 
     @Test
@@ -279,18 +197,12 @@ public class NewsTest {
         String category = "День рождения";
         String description = "Описание";
 
-        openNewsControlPanel();
-        createTestNews(title, category, description, DateUtils.getDateDaysAgo(7));
-
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsWithDate(title, category, description, DateUtils.getDateDaysAgo(7));
         newsEditPage.openFilterScreen();
-        filterNewsPage.waitForPageLoaded();
+        filterNewsPage.filterByDateRange(DateUtils.getDateDaysAgo(7), DateUtils.getToday());
 
-        filterNewsPage.setStartDate(DateUtils.getDateDaysAgo(7));
-        filterNewsPage.setEndDate(DateUtils.getToday());
-
-        filterNewsPage.applyFilter();
-
-        onView(withText(title)).check(matches(isDisplayed()));
+        newsEditPage.checkNewsExists(title);
     }
 
     @Test
@@ -300,115 +212,92 @@ public class NewsTest {
         String category = "Нужна помощь";
         String description = "Описание";
 
-        openNewsControlPanel();
-        createTestNews(title, category, description, DateUtils.getDateDaysAgo(30));
-
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsWithDate(title, category, description, DateUtils.getDateDaysAgo(30));
         newsEditPage.openFilterScreen();
-        filterNewsPage.waitForPageLoaded();
+        filterNewsPage.filterByDateRange(DateUtils.getDateDaysAgo(30), DateUtils.getToday());
 
-        filterNewsPage.setStartDate(DateUtils.getDateDaysAgo(30));
-        filterNewsPage.setEndDate(DateUtils.getToday());
-
-        filterNewsPage.applyFilter();
-
-        onView(withText(title)).check(matches(isDisplayed()));
+        newsEditPage.checkNewsExists(title);
     }
 
     @Test
     @Story("TC019 – Фильтрация новостей по категории 'Объявление'")
     public void shouldFilterNewsByCategoryAnnouncement() {
-        String titleAnnouncement = "Объявление" + System.currentTimeMillis();;
-        String titleMassage = "Массаж" + System.currentTimeMillis();;
+        String titleAnnouncement = "Объявление" + System.currentTimeMillis();
+        String titleMassage = "Массаж" + System.currentTimeMillis();
         String categoryAnnouncement = "Объявление";
         String categoryMassage = "Массаж";
         String description = "Описание";
 
-        openNewsControlPanel();
-
-        createTestNewsToday(titleAnnouncement, categoryAnnouncement, description);
-        createTestNewsToday(titleMassage, categoryMassage, description);
-
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsToday(titleAnnouncement, categoryAnnouncement, description);
+        newsEditPage.createNewsToday(titleMassage, categoryMassage, description);
         newsEditPage.openFilterScreen();
-        filterNewsPage.waitForPageLoaded();
-        filterNewsPage.selectCategory(categoryAnnouncement);
-        filterNewsPage.applyFilter();
-        newsEditPage.sortNews();
+        filterNewsPage.filterByCategory(categoryAnnouncement);
+        newsEditPage.sortNews(titleAnnouncement);
 
-        onView(withText(titleAnnouncement)).check(matches(isDisplayed()));
-        onView(withText(titleMassage)).check(doesNotExist());
+        newsEditPage.checkNewsDoesNotExist(titleMassage);
     }
 
     @Test
     @Story("TC020 – Фильтрация новостей по категории 'Массаж'")
     public void shouldFilterNewsByCategoryMassage() {
-        String titleAnnouncement = "Объявление" + System.currentTimeMillis();;
-        String titleMassage = "Массаж" + System.currentTimeMillis();;
+        String titleAnnouncement = "Объявление" + System.currentTimeMillis();
+        String titleMassage = "Массаж" + System.currentTimeMillis();
         String categoryAnnouncement = "Объявление";
         String categoryMassage = "Массаж";
         String description = "Описание";
 
-        openNewsControlPanel();
-
-        createTestNewsToday(titleAnnouncement, categoryAnnouncement, description);
-        createTestNewsToday(titleMassage, categoryMassage, description);
-
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsToday(titleAnnouncement, categoryAnnouncement, description);
+        newsEditPage.createNewsToday(titleMassage, categoryMassage, description);
         newsEditPage.openFilterScreen();
-        filterNewsPage.waitForPageLoaded();
-        filterNewsPage.selectCategory(categoryMassage);
-        filterNewsPage.applyFilter();
-        newsEditPage.sortNews();
+        filterNewsPage.filterByCategory(categoryMassage);
+        newsEditPage.sortNews(titleMassage);
 
-
-        onView(withText(titleMassage)).check(matches(isDisplayed()));
-        onView(withText(titleAnnouncement)).check(doesNotExist());
+        newsEditPage.checkNewsDoesNotExist(titleAnnouncement);
     }
 
     @Test
     @Story("TC021 – Сброс фильтра по умолчанию - показываются все новости")
     public void shouldResetFilterShowsAllNews() {
-        String titleMassage = "Массаж" + System.currentTimeMillis();;
-        String titleAnnouncement = "Объявление" + System.currentTimeMillis();;
+        String titleMassage = "Массаж" + System.currentTimeMillis();
+        String titleAnnouncement = "Объявление" + System.currentTimeMillis();
         String categoryMassage = "Массаж";
         String categoryAnnouncement = "Объявление";
         String description = "Описание";
 
-        openNewsControlPanel();
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsToday(titleMassage, categoryMassage, description);
+        newsEditPage.createNewsToday(titleAnnouncement, categoryAnnouncement, description);
+        newsEditPage.sortNews(titleAnnouncement);
 
-        createTestNewsToday(titleMassage, categoryMassage, description);
-        createTestNewsToday(titleAnnouncement, categoryAnnouncement, description);
-
-        newsEditPage.sortNews();
-
-        onView(withText(titleMassage)).check(matches(isDisplayed()));
-        onView(withText(titleAnnouncement)).check(matches(isDisplayed()));
+        newsEditPage.checkNewsExists(titleMassage);
+        newsEditPage.checkNewsExists(titleAnnouncement);
 
         newsEditPage.openFilterScreen();
-        filterNewsPage.waitForPageLoaded();
-        filterNewsPage.selectCategory(categoryMassage);
-        filterNewsPage.applyFilter();
+        filterNewsPage.filterByCategory(categoryMassage);
 
-        onView(withText(titleMassage)).check(matches(isDisplayed()));
-        onView(withText(titleAnnouncement)).check(doesNotExist());
+        newsEditPage.checkNewsExists(titleMassage);
+        newsEditPage.checkNewsDoesNotExist(titleAnnouncement);
 
         newsEditPage.openFilterScreen();
-        filterNewsPage.waitForPageLoaded();
-        filterNewsPage.clearCategory();
-        filterNewsPage.applyFilter();
+        filterNewsPage.resetFilter();
 
-        onView(withText(titleMassage)).check(matches(isDisplayed()));
-        onView(withText(titleAnnouncement)).check(matches(isDisplayed()));
+        newsEditPage.checkNewsExists(titleMassage);
+        newsEditPage.checkNewsExists(titleAnnouncement);
     }
 
     @Test // Баг – дата создания отображается некорректно (год 58448)
     @Story("TC022 – Дата создания новости равна дате публикации")
     public void shouldCreationDateEqualsPublicationDate() {
-        String title = "Благодарность" + System.currentTimeMillis();;
+        String title = "Благодарность" + System.currentTimeMillis();
         String category = "Благодарность";
         String description = "Описание";
 
-        openNewsControlPanel();
-        createTestNewsToday(title, category, description);
-        newsEditPage.sortNews();
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsToday(title, category, description);
+        newsEditPage.sortNews(title);
 
         String publicationDate = newsEditPage.getPublicationDate(title);
         String creationDate = newsEditPage.getCreationDate(title);
@@ -419,11 +308,11 @@ public class NewsTest {
     @Test
     @Story("TC023 – Дата публикации новости равна завтрашней дате")
     public void shouldPublicationDateEqualsTomorrow() {
-        String title = "Зарплата" + System.currentTimeMillis();;
+        String title = "Зарплата" + System.currentTimeMillis();
         String category = "Зарплата";
         String description = "Описание";
 
-        openNewsControlPanel();
+        mainPage.openNewsControlPanel();
         newsEditPage.addNews();
         createNewsPage.waitForPageLoaded();
         createNewsPage.selectCategory(category);
@@ -433,141 +322,122 @@ public class NewsTest {
         createNewsPage.enterDescription(description);
         createNewsPage.clickSave();
         newsEditPage.waitForPageLoaded();
-        newsEditPage.sortNews();
+        newsEditPage.sortNews(title);
 
         String publicationDate = newsEditPage.getPublicationDate(title);
 
         assertEquals("Дата публикации должна быть завтрашней", DateUtils.getTomorrow(), publicationDate);
     }
 
-    // === Негативные сценарии создания новости ===
+    // === Негативные сценарии создания новости  ===
 
     @Test
     @Story("TC035 – Создание новости с пустым полем Category")
     public void shouldNotCreateNewsWithEmptyCategory() {
-        openNewsControlPanel();
+        mainPage.openNewsControlPanel();
         newsEditPage.addNews();
         createNewsPage.waitForPageLoaded();
 
-        createNewsPage.enterTitle("Новость");
-        createNewsPage.enterPublicationDate();
-        createNewsPage.enterTime();
-        createNewsPage.enterDescription("Описание");
-        createNewsPage.clickSave();
+        createNewsPage.attemptCreateWithoutCategory(
+                "Новость",
+                DateUtils.getToday(),
+                "Описание"
+        );
 
-        createNewsPage.checkToastMessage(TestData.FILL_EMPTY_FIELDS_ERROR);
-        createNewsPage.checkPageDisplayed();
+        createNewsPage.checkCreationErrorAndPageDisplayed(TestData.FILL_EMPTY_FIELDS_ERROR);
     }
 
     @Test
     @Story("TC036 – Создание новости с пустым полем Description")
     public void shouldNotCreateNewsWithEmptyDescription() {
-        openNewsControlPanel();
+        mainPage.openNewsControlPanel();
         newsEditPage.addNews();
         createNewsPage.waitForPageLoaded();
 
-        createNewsPage.selectCategory("Объявление");
-        createNewsPage.enterTitle("Новость");
-        createNewsPage.enterPublicationDate();
-        createNewsPage.enterTime();
-        createNewsPage.clickSave();
+        createNewsPage.attemptCreateWithoutDescription(
+                "Объявление",
+                "Новость",
+                DateUtils.getToday()
+        );
 
-        createNewsPage.checkToastMessage(TestData.FILL_EMPTY_FIELDS_ERROR);
-        createNewsPage.checkPageDisplayed();
+        createNewsPage.checkCreationErrorAndPageDisplayed(TestData.FILL_EMPTY_FIELDS_ERROR);
     }
 
     @Test
     @Story("TC037 – Создание новости с пустым полем Publication date")
     public void shouldNotCreateNewsWithEmptyDate() {
-        openNewsControlPanel();
+        mainPage.openNewsControlPanel();
         newsEditPage.addNews();
         createNewsPage.waitForPageLoaded();
 
-        createNewsPage.selectCategory("Массаж");
-        createNewsPage.enterTitle("Новость");
-        createNewsPage.enterTime();
-        createNewsPage.enterDescription("Описание");
-        createNewsPage.clickSave();
+        createNewsPage.attemptCreateWithoutPublicationDate(
+                "Массаж",
+                "Новость",
+                "Описание"
+        );
 
-        createNewsPage.checkToastMessage(TestData.FILL_EMPTY_FIELDS_ERROR);
-        createNewsPage.checkPageDisplayed();
+        createNewsPage.checkCreationErrorAndPageDisplayed(TestData.FILL_EMPTY_FIELDS_ERROR);
     }
 
     @Test
     @Story("TC038 – Создание новости с пустым полем Time")
     public void shouldNotCreateNewsWithEmptyTime() {
-        openNewsControlPanel();
+        mainPage.openNewsControlPanel();
         newsEditPage.addNews();
         createNewsPage.waitForPageLoaded();
 
-        createNewsPage.selectCategory("Зарплата");
-        createNewsPage.enterTitle("Новость");
-        createNewsPage.enterPublicationDate();
-        createNewsPage.enterDescription("Описание");
-        createNewsPage.clickSave();
+        createNewsPage.attemptCreateWithoutTime(
+                "Зарплата",
+                "Новость",
+                DateUtils.getToday(),
+                "Описание"
+        );
 
-        createNewsPage.checkToastMessage(TestData.FILL_EMPTY_FIELDS_ERROR);
-        createNewsPage.checkPageDisplayed();
+        createNewsPage.checkCreationErrorAndPageDisplayed(TestData.FILL_EMPTY_FIELDS_ERROR);
     }
 
     @Test
     @Story("TC039 – Создание новости с пустым полем Title")
     public void shouldNotCreateNewsWithEmptyTitle() {
-        openNewsControlPanel();
+        mainPage.openNewsControlPanel();
         newsEditPage.addNews();
         createNewsPage.waitForPageLoaded();
 
-        createNewsPage.selectCategory("Профсоюз");
-        createNewsPage.clearTitle();
-        createNewsPage.enterPublicationDate();
-        createNewsPage.enterTime();
-        createNewsPage.enterDescription("Описание");
-        createNewsPage.clickSave();
+        createNewsPage.attemptCreateWithoutTitle(
+                "Профсоюз",
+                DateUtils.getToday(),
+                "Описание"
+        );
 
-        createNewsPage.checkToastMessage(TestData.FILL_EMPTY_FIELDS_ERROR);
-        createNewsPage.checkPageDisplayed();
+        createNewsPage.checkCreationErrorAndPageDisplayed(TestData.FILL_EMPTY_FIELDS_ERROR);
     }
 
     @Test
     @Story("TC040 – Создание новости со всеми пустыми полями")
     public void shouldNotCreateNewsWithAllEmptyFields() {
-        openNewsControlPanel();
+        mainPage.openNewsControlPanel();
         newsEditPage.addNews();
         createNewsPage.waitForPageLoaded();
-
-        createNewsPage.clickSave();
-
-        createNewsPage.checkToastMessage(TestData.FILL_EMPTY_FIELDS_ERROR);
-        createNewsPage.checkPageDisplayed();
+        createNewsPage.attemptCreateWithAllEmpty();
+        createNewsPage.checkCreationErrorAndPageDisplayed(TestData.FILL_EMPTY_FIELDS_ERROR);
     }
 
     @Test
     @Story("TC041 – Создание новости с заголовком длиной 50+ символов")
     public void shouldCreateNewsWithLongTitle() {
         String longTitle = String.join("", Collections.nCopies(51, "A"));
-        openNewsControlPanel();
-        newsEditPage.addNews();
-        createNewsPage.waitForPageLoaded();
 
-        createNewsPage.selectCategory("Объявление");
-        createNewsPage.enterTitle(longTitle);
-        createNewsPage.enterPublicationDate();
-        createNewsPage.enterTime();
-        createNewsPage.enterDescription("Описание");
-        createNewsPage.clickSave();
-
-        newsEditPage.waitForPageLoaded();
-        newsEditPage.sortNews();
-        onView(withText(longTitle)).check(matches(isDisplayed()));
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsToday(longTitle, "Объявление", "Описание");
+        newsEditPage.sortNews(longTitle);
     }
 
     @Test // Баг - новость создается, ошибки сохранения нет (падает, потому что находит новость)
     @Story("TC042 – Создание новости с внедрением HTML-тегов (XSS)")
     public void shouldNotCreateNewsWithXSS() {
-        openNewsControlPanel();
+        mainPage.openNewsControlPanel();
         newsEditPage.addNews();
         createNewsPage.waitForPageLoaded();
-
         createNewsPage.selectCategory("Объявление");
         createNewsPage.enterTitle(TestData.XSS_PAYLOAD);
         createNewsPage.enterPublicationDate();
@@ -577,7 +447,7 @@ public class NewsTest {
 
         createNewsPage.checkToastMessage(SAVING_FAILED_ERROR);
 
-        newsEditPage.sortNews();
+        newsEditPage.sortNews(XSS_PAYLOAD);
         newsEditPage.checkNewsDoesNotExist(TestData.XSS_PAYLOAD);
     }
 
@@ -588,13 +458,12 @@ public class NewsTest {
         String tomorrowTitle = "Завтрашняя";
         String todayTitle = "Сегодняшняя";
 
-        openNewsControlPanel();
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsWithDate(afterTomorrowTitle, "Объявление", "Описание", DateUtils.getAfterTomorrow());
+        newsEditPage.createNewsWithDate(tomorrowTitle, "Объявление", "Описание", DateUtils.getTomorrow());
+        newsEditPage.createNewsWithDate(todayTitle, "Объявление", "Описание", DateUtils.getToday());
 
-        createTestNews(afterTomorrowTitle, "Объявление", "Описание", DateUtils.getAfterTomorrow());
-        createTestNews(tomorrowTitle, "Объявление", "Описание", DateUtils.getTomorrow());
-        createTestNews(todayTitle, "Объявление", "Описание", DateUtils.getToday());
-
-        newsEditPage.sortNews();
+        newsEditPage.sortNews(afterTomorrowTitle);
 
         assertEquals("Заголовок на позиции 1 должен быть 'Послезавтрашняя'",
                 afterTomorrowTitle, newsEditPage.getNewsTitleAtPosition(2));
@@ -602,5 +471,26 @@ public class NewsTest {
                 tomorrowTitle, newsEditPage.getNewsTitleAtPosition(1));
         assertEquals("Заголовок на позиции 3 должен быть 'Сегодняшняя'",
                 todayTitle, newsEditPage.getNewsTitleAtPosition(0));
+    }
+
+     //=== Новый тест: редактирование новости ===
+
+    @Test
+    @Story("TC044 – Редактирование существующей новости")
+    public void shouldEditNews() {
+        String oldTitle = "Старый заголовок" + System.currentTimeMillis();
+        String newTitle = "Новый заголовок" + System.currentTimeMillis();
+        String newDescription = "Обновлённое описание";
+        String category = "Объявление";
+
+        mainPage.openNewsControlPanel();
+        newsEditPage.createNewsToday(oldTitle, category, "Старое описание");
+        newsEditPage.sortNews(oldTitle);
+
+        newsEditPage.editNewsByTitle(oldTitle, newTitle, newDescription);
+
+        newsEditPage.checkNewsDoesNotExist(oldTitle);
+        newsEditPage.checkNewsExists(newTitle);
+        newsEditPage.checkNewsDescription(newTitle, newDescription);
     }
 }
