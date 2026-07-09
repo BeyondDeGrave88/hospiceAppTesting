@@ -65,12 +65,12 @@
 
 | Файл | Содержание |
 |------|-------------|
-| [Plan.md](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/82553ba8143750339fc1e879f39de921a586019f/docs/Plan.md) | Данный план тестирования |
-| [Check.xlsx](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/82553ba8143750339fc1e879f39de921a586019f/docs/Check.xlsx) | Чек-лист с отметками о прохождении/непрохождении тестов |
-| [Cases.xlsx](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/82553ba8143750339fc1e879f39de921a586019f/docs/Cases.xlsx) | Тест-кейсы с шагами, ожидаемым результатом и отметкой о покрытии с указанием причин, почему тест-кейс не может быть покрыт |
-| [allure-results.zip](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/82553ba8143750339fc1e879f39de921a586019f/docs/allure-results.zip) | Сгенерированный отчёт Allure |
-| [README.md](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/82553ba8143750339fc1e879f39de921a586019f/docs/README.md) | Описание процедуры запуска авто-тестов |
-| [Result.md](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/82553ba8143750339fc1e879f39de921a586019f/docs/Result.md) | Результат сравнения времени проверки приложения по чек-листу руками и UI-тестами. |
+| [Plan.md](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/develop/docs/Plan.md) | Данный план тестирования |
+| [Check.xlsx](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/develop/docs/Check.xlsx) | Чек-лист с отметками о прохождении/непрохождении тестов |
+| [Cases.xlsx](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/develop/docs/Cases.xlsx) | Тест-кейсы с шагами, ожидаемым результатом и отметкой о покрытии с указанием причин, почему тест-кейс не может быть покрыт |
+| [allure-results.zip](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/develop/docs/allure-results.zip) | Сгенерированный отчёт Allure |
+| [README.md](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/develop/docs/README.md) | Описание процедуры запуска авто-тестов |
+| [Result.md](https://github.com/BeyondDeGrave88/hospiceAppTesting/blob/develop/docs/Result.md) | Результат сравнения времени проверки приложения по чек-листу руками и UI-тестами. |
 
 Все файлы размещены в корне репозитория `docs/`.
 
@@ -161,6 +161,7 @@
 | TC021 | Новости | Сброс фильтра (показываются все новости) | Да | — |
 | TC022 | Новости | Дата создания ("Creation date") новости равна дате публикации ("Publication date") | Да | — |
 | TC023 | Новости | Дата публикации ("Publication date") новости равна завтрашней дате  | Да | — |
+| TC044 | Новости | Редактирование существующей новости  | Да | — |
 | TC024 | Цитаты | Переход на страницу "Цитаты" | Да | — |
 | TC025 | Цитаты | Развернуть первую цитату | Да | — |
 | TC026 | Цитаты | Свернуть первую цитату | Да | — |
@@ -188,8 +189,8 @@
 
 | Параметр | Значение |
 |----------|----------|
-| Всего тест-кейсов | 43 |
-| Запланировано к автоматизации | **37** |
+| Всего тест-кейсов | 44 |
+| Запланировано к автоматизации | **38** |
 | Не автоматизируется | **6** |
 | Процент покрытия автотестами | **~86%** |
 
