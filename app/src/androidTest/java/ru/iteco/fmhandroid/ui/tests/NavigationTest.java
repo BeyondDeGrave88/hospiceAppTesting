@@ -2,6 +2,8 @@ package ru.iteco.fmhandroid.ui.tests;
 
 import static androidx.test.espresso.Espresso.pressBack;
 
+import static org.junit.Assert.fail;
+
 import androidx.test.espresso.NoActivityResumedException;
 
 import org.junit.Before;
@@ -55,14 +57,14 @@ public class NavigationTest extends BaseTest {
         mainPage.checkMainPageDisplayed();
     }
 
-    @Test//Баг - приложение закрывается
+    @Test
     @Story("TC009 – Однократное нажатие системной кнопки 'Назад' на главной странице Main")
-    public void shouldMinimizeAppOnBackPressFromMain() {
+    public void shouldCloseAppOnBackPressFromMain() {
         mainPage.checkMainPageDisplayed();
         try {
             pressBack();
+            fail("Приложение должно закрыться при нажатии 'Назад' на главной странице");
         } catch (NoActivityResumedException e) {
-            throw new AssertionError("Приложение было закрыто вместо сворачивания. Это баг!", e);
         }
     }
 }
