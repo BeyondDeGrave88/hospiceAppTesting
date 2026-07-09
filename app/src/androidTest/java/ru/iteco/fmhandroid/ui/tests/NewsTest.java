@@ -47,7 +47,6 @@ public class NewsTest extends BaseTest {
     }
     @After
     public void tearDown() {
-        // Если нет созданных новостей, ничего не делаем
         if (createdTitles.isEmpty()) {
             createdTitles.clear();
             return;
