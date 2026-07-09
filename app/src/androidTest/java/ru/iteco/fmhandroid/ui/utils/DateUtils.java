@@ -14,11 +14,16 @@ public class DateUtils {
     public static String getTomorrow() {
         return LocalDate.now().plusDays(1).format(FORMATTER);
     }
+
     public static String getAfterTomorrow() {
         return LocalDate.now().plusDays(2).format(FORMATTER);
     }
 
     public static String getDateDaysAgo(int days) {
         return LocalDate.now().minusDays(days).format(FORMATTER);
+    }
+
+    public static String getDateDaysAfter(int days) {
+        return LocalDate.now().plusDays(days).format(FORMATTER);
     }
 }

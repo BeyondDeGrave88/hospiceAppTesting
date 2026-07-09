@@ -101,11 +101,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.4.0'
 
-// Allure Java
     androidTestImplementation "io.qameta.allure:allure-java-commons:2.24.0"
     androidTestImplementation "io.qameta.allure:allure-model:2.24.0"
     androidTestImplementation "io.qameta.allure:allure-junit4:2.24.0"
 
-// Для ScreenshotRule и LogcatRule
     androidTestImplementation "io.qameta.allure:allure-kotlin-android:2.4.0"
 }

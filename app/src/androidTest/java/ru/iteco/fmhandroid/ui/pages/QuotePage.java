@@ -17,7 +17,7 @@ import androidx.test.espresso.ViewAction;
 
 import org.hamcrest.Matcher;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.kotlin.Allure;
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 
@@ -27,30 +27,82 @@ public class QuotePage {
     private static final int TITLE_VIEW = R.id.our_mission_item_title_text_view;
     private static final int DESCRIPTION_VIEW = R.id.our_mission_item_description_text_view;
 
-    @Step("Ожидание загрузки страницы 'Цитаты'")
+    public String getFirstQuoteTitle() {
+        Allure.step("Получение заголовка первой цитаты");
+        final String[] text = new String[1];
+        onView(withId(RECYCLER_VIEW))
+                .perform(actionOnItemAtPosition(0, new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return isDisplayed();
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "Get text from first quote title";
+                    }
+
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        View titleView = view.findViewById(TITLE_VIEW);
+                        if (titleView != null) {
+                            text[0] = ((TextView) titleView).getText().toString();
+                        }
+                    }
+                }));
+        return text[0];
+    }
+
+    public String getFirstQuoteDescription() {
+        Allure.step("Получение описания первой цитаты");
+        final String[] text = new String[1];
+        onView(withId(RECYCLER_VIEW))
+                .perform(actionOnItemAtPosition(0, new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return isDisplayed();
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "Get text from first quote description";
+                    }
+
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        View descView = view.findViewById(DESCRIPTION_VIEW);
+                        if (descView != null) {
+                            text[0] = ((TextView) descView).getText().toString();
+                        }
+                    }
+                }));
+        return text[0];
+    }
+
     public void waitForPageLoaded() {
+        Allure.step("Ожидание загрузки страницы 'Цитаты'");
         ViewUtils.waitForView(withText("Love is all"), 10000);
     }
 
-    @Step("Проверка отображения страницы 'Цитаты'")
     public void checkPageDisplayed() {
+        Allure.step("Проверка отображения страницы 'Цитаты'");
         waitForPageLoaded();
         onView(withText("Love is all")).check(matches(isDisplayed()));
     }
 
-    @Step("Нажатие на кнопку раскрытия первой цитаты")
     public void clickExpandButton() {
+        Allure.step("Нажатие на кнопку раскрытия первой цитаты");
         onView(withId(RECYCLER_VIEW))
                 .perform(actionOnItemAtPosition(0, click()));
     }
 
-    @Step("Развернуть первую цитату")
     public void expandFirstQuote() {
+        Allure.step("Развернуть первую цитату");
         clickExpandButton();
     }
 
-    @Step("Проверка, что описание первой цитаты видимо")
     public void checkDescriptionVisible() {
+        Allure.step("Проверка, что описание первой цитаты видимо");
         onView(withId(RECYCLER_VIEW))
                 .perform(actionOnItemAtPosition(0, new ViewAction() {
                     @Override
@@ -80,8 +132,8 @@ public class QuotePage {
                 }));
     }
 
-    @Step("Проверка, что описание первой цитаты скрыто")
     public void checkDescriptionHidden() {
+        Allure.step("Проверка, что описание первой цитаты скрыто");
         onView(withId(RECYCLER_VIEW))
                 .perform(actionOnItemAtPosition(0, new ViewAction() {
                     @Override
@@ -106,8 +158,8 @@ public class QuotePage {
                 }));
     }
 
-    @Step("Проверка, что заголовок первой цитаты видим")
     public void checkTitleVisible() {
+        Allure.step("Проверка, что заголовок первой цитаты видим");
         onView(withId(RECYCLER_VIEW))
                 .perform(actionOnItemAtPosition(0, new ViewAction() {
                     @Override
@@ -130,57 +182,5 @@ public class QuotePage {
                         }
                     }
                 }));
-    }
-
-    @Step("Получение заголовка первой цитаты")
-    public String getFirstQuoteTitle() {
-        final String[] text = new String[1];
-        onView(withId(RECYCLER_VIEW))
-                .perform(actionOnItemAtPosition(0, new ViewAction() {
-                    @Override
-                    public Matcher<View> getConstraints() {
-                        return isDisplayed();
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return "Get text from first quote title";
-                    }
-
-                    @Override
-                    public void perform(UiController uiController, View view) {
-                        View titleView = view.findViewById(TITLE_VIEW);
-                        if (titleView != null) {
-                            text[0] = ((TextView) titleView).getText().toString();
-                        }
-                    }
-                }));
-        return text[0];
-    }
-
-    @Step("Получение описания первой цитаты")
-    public String getFirstQuoteDescription() {
-        final String[] text = new String[1];
-        onView(withId(RECYCLER_VIEW))
-                .perform(actionOnItemAtPosition(0, new ViewAction() {
-                    @Override
-                    public Matcher<View> getConstraints() {
-                        return isDisplayed();
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return "Get text from first quote description";
-                    }
-
-                    @Override
-                    public void perform(UiController uiController, View view) {
-                        View descView = view.findViewById(DESCRIPTION_VIEW);
-                        if (descView != null) {
-                            text[0] = ((TextView) descView).getText().toString();
-                        }
-                    }
-                }));
-        return text[0];
     }
 }

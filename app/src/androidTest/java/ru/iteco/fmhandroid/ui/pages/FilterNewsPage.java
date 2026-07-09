@@ -9,7 +9,7 @@ import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import io.qameta.allure.Step;
+import io.qameta.allure.kotlin.Allure;
 import ru.iteco.fmhandroid.R;
 import ru.iteco.fmhandroid.ui.utils.ViewUtils;
 
@@ -20,56 +20,57 @@ public class FilterNewsPage {
     public static final int START_DATE_EDIT_TEXT = R.id.news_item_publish_date_start_text_input_edit_text;
     public static final int END_DATE_EDIT_TEXT = R.id.news_item_publish_date_end_text_input_edit_text;
 
-    @Step("Ожидание загрузки страницы фильтра")
-    public void waitForPageLoaded() {
-        ViewUtils.waitForView(APPLY_FILTER_BUTTON_ID, 10000);
-    }
 
-    @Step("Выбор категории {category} в фильтре")
-    public void selectCategory(String category) {
-        onView(withId(CATEGORY_AUTO_COMPLETE_TEXT_VIEW)).perform(click());
-        onView(withText(category)).inRoot(isPlatformPopup()).perform(click());
-    }
-
-    @Step("Очистка категории в фильтре")
-    public void clearCategory() {
-        onView(withId(CATEGORY_AUTO_COMPLETE_TEXT_VIEW))
-                .perform(clearText(), closeSoftKeyboard());
-    }
-
-    @Step("Установка даты начала {date}")
     public void setStartDate(String date) {
+        Allure.step("Установка даты начала {date}");
         onView(withId(START_DATE_EDIT_TEXT))
                 .perform(replaceText(date), closeSoftKeyboard());
     }
 
-    @Step("Установка даты окончания {date}")
     public void setEndDate(String date) {
+        Allure.step("Установка даты окончания {date}");
         onView(withId(END_DATE_EDIT_TEXT))
                 .perform(replaceText(date), closeSoftKeyboard());
     }
 
-    @Step("Применение фильтра")
+    public void waitForPageLoaded() {
+        Allure.step("Ожидание загрузки страницы фильтра");
+        ViewUtils.waitForView(APPLY_FILTER_BUTTON_ID, 10000);
+    }
+
+    public void selectCategory(String category) {
+        Allure.step("Выбор категории {category} в фильтре");
+        onView(withId(CATEGORY_AUTO_COMPLETE_TEXT_VIEW)).perform(click());
+        onView(withText(category)).inRoot(isPlatformPopup()).perform(click());
+    }
+
+    public void clearCategory() {
+        Allure.step("Очистка категории в фильтре");
+        onView(withId(CATEGORY_AUTO_COMPLETE_TEXT_VIEW))
+                .perform(clearText(), closeSoftKeyboard());
+    }
+
     public void applyFilter() {
+        Allure.step("Применение фильтра");
         onView(withId(APPLY_FILTER_BUTTON_ID)).perform(click());
     }
 
-    @Step("Применить фильтр по диапазону дат: {start} - {end}")
     public void filterByDateRange(String startDate, String endDate) {
+        Allure.step("Применить фильтр по диапазону дат: {start} - {end}");
         waitForPageLoaded();
         setStartDate(startDate);
         setEndDate(endDate);
         applyFilter();
     }
 
-    @Step("Применить фильтр по категории: {category}")
     public void filterByCategory(String category) {
+        Allure.step("Применить фильтр по категории: {category}");
         waitForPageLoaded();
         selectCategory(category);
         applyFilter();
     }
-    @Step("Сбросить фильтр (очистить категорию)")
     public void resetFilter() {
+        Allure.step("Сбросить фильтр (очистить категорию)");
         waitForPageLoaded();
         clearCategory();
         applyFilter();

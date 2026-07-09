@@ -2,82 +2,32 @@ package ru.iteco.fmhandroid.ui.tests;
 
 import static org.junit.Assert.assertEquals;
 
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import io.qameta.allure.android.rules.LogcatRule;
-import io.qameta.allure.android.rules.ScreenshotRule;
 import io.qameta.allure.android.runners.AllureAndroidJUnit4;
 import io.qameta.allure.kotlin.Epic;
 import io.qameta.allure.kotlin.Story;
 
-import ru.iteco.fmhandroid.ui.AppActivity;
 import ru.iteco.fmhandroid.ui.data.TestData;
-import ru.iteco.fmhandroid.ui.pages.AuthorizationPage;
-import ru.iteco.fmhandroid.ui.pages.MainPage;
 import ru.iteco.fmhandroid.ui.pages.QuotePage;
 
 @RunWith(AllureAndroidJUnit4.class)
 @Epic("Цитаты")
-public class QuoteTest {
+public class QuoteTest extends BaseTest {
 
-    private AuthorizationPage authPage;
-    private MainPage mainPage;
     private QuotePage quotePage;
 
-    @Rule
-    public ActivityScenarioRule<AppActivity> activityScenarioRule =
-            new ActivityScenarioRule<>(AppActivity.class);
-
-    @Rule
-    public ScreenshotRule screenshotRule = new ScreenshotRule();
-
-    @Rule
-    public LogcatRule logcatRule = new LogcatRule();
-
-    private boolean isLoggedIn() {
-        if (authPage.isAuthPageDisplayed()) {
-            return false;
-        }
-        return mainPage.isAuthorized();
-    }
-
+    @Override
     @Before
     public void setUp() {
-        authPage = new AuthorizationPage();
-        mainPage = new MainPage();
+        super.setUp();
         quotePage = new QuotePage();
-
-        if (isLoggedIn()) {
-            mainPage.logout();
-        }
-
-        if (!authPage.isAuthPageDisplayed()) {
-            activityScenarioRule.getScenario().recreate();
-            if (!authPage.isAuthPageDisplayed() && mainPage.isAuthorized()) {
-                mainPage.logout();
-            }
-        }
-
-        authPage.waitForPageLoaded();
-        authPage.login(TestData.VALID_LOGIN, TestData.VALID_PASSWORD);
-        mainPage.checkMainPageDisplayed();
     }
 
-    @After
-    public void tearDown() {
-        if (isLoggedIn()) {
-            mainPage.logout();
-            authPage.waitForPageLoaded();
-        }
-    }
 
-    @Test// Баг - разные кавычки в начале и конце текста заголовка
+    @Test // Баг - разные кавычки в начале и конце текста заголовка
     @Story("TC024 – Переход на страницу 'Цитаты'")
     public void shouldOpenQuotePage() {
         mainPage.openQuotePage();
@@ -87,7 +37,7 @@ public class QuoteTest {
                 TestData.QUOTE_TITLE, actualTitle);
     }
 
-    @Test// Баг - разные кавычки в начале и конце текста заголовка и описания
+    @Test // Баг - разные кавычки в начале и конце текста заголовка и описания
     @Story("TC025 – Развернуть первую цитату")
     public void shouldExpandFirstQuote() {
         mainPage.openQuotePage();
@@ -107,7 +57,7 @@ public class QuoteTest {
                 TestData.QUOTE_DESCRIPTION, actualDescription);
     }
 
-    @Test// Баг - разные кавычки в начале и конце текста заголовка и описания
+    @Test // Баг - разные кавычки в начале и конце текста заголовка и описания
     @Story("TC026 – Свернуть первую цитату")
     public void shouldCollapseFirstQuote() {
         mainPage.openQuotePage();
